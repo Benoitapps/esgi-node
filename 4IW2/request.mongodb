@@ -69,3 +69,34 @@ db.Sakila_films.aggregate([
   { $skip: 10 },
   { $limit: 10 },
 ]);
+
+db.video_movieDetails.aggregate([
+  { $match: { "imdb.rating": { $gt: 8 } } },
+  { $unwind: "$actors" },
+  {
+    $group: {
+      _id: { rated: "$rated", actor: "$actors" },
+      movies: {
+        $addToSet: {
+          title: "$title",
+          rating: "$imdb.rating",
+        },
+      },
+      avgRating: {
+        $avg: "$imdb.rating",
+      },
+    },
+  },
+  {
+    $group: {
+      _id: "$_id.actor",
+      rateds: {
+        $addToSet: {
+          rated: "$_id.rated",
+          avgRating: "$avgRating",
+          movies: "$movies",
+        },
+      },
+    },
+  },
+]);

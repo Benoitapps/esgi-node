@@ -1,0 +1,99 @@
+// Calculer la moyenne du nombre de produits commandé par commande.
+// Afficher les produits commandés au moins une fois par 55175
+db.DBEnvyLoad_orders.aggregate([
+  {
+    $unwind: {
+      path: "$lineItems",
+    },
+  },
+  {
+    $group: {
+      _id: "$lineItems.prodId",
+      avgQuantity: {
+        $avg: "$lineItems.prodCount",
+      },
+      orders: {
+        $addToSet: {
+          orderId: "$_id",
+          CustId: "$CustId",
+        },
+      },
+    },
+  },
+  { $match: { "orders.CustId": 55175 } },
+]);
+
+// Calculer la moyenne du nombre de produits commandés par commande de l'utilisateur 57852
+db.DBEnvyLoad_orders.aggregate([
+  { $match: { CustId: 55175 } },
+  {
+    $unwind: {
+      path: "$lineItems",
+    },
+  },
+  {
+    $group: {
+      _id: "$lineItems.prodId",
+      avgQuantity: {
+        $avg: "$lineItems.prodCount",
+      },
+      orders: {
+        $addToSet: {
+          orderId: "$_id",
+          CustId: "$CustId",
+        },
+      },
+    },
+  },
+]);
+
+//Exercice 2
+//Question 1
+db.video_movieDetails.aggregate([
+  {
+    $match: {
+      "imdb.rating": {
+        $gte: 8,
+      },
+    },
+  },
+  {
+    $unwind: {
+      path: "$actors",
+    },
+  },
+  {
+    $group: {
+      _id: {
+        actor: "$actors",
+        rated: "$rated",
+      },
+      movies: {
+        $addToSet: {
+          title: "$title",
+          rating: "$imdb.rating",
+        },
+      },
+      avgRating: {
+        $avg: "$imdb.rating",
+      },
+    },
+  },
+  {
+    $group: {
+      _id: "$_id.actor",
+      rateds: {
+        $addToSet: {
+          rated: "$_id.rated",
+          movies: "$movies",
+          avgRating: "$avgRating",
+        },
+      },
+    },
+  },
+  {
+    $match: {
+      _id: "Mark Ruffalo",
+    },
+  },
+]);
