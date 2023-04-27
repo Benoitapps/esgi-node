@@ -97,3 +97,43 @@ db.video_movieDetails.aggregate([
     },
   },
 ]);
+
+db.video_movieDetails.aggregate([
+  {
+    $unwind: {
+      path: "$genres",
+    },
+  },
+  {
+    $group: {
+      _id: {
+        genre: "$genres",
+        rated: "$rated",
+      },
+      best: {
+        $max: {
+          rating: "$imdb.rating",
+          title: "$title",
+        },
+      },
+      worst: {
+        $min: {
+          rating: "$imdb.rating",
+          title: "$title",
+        },
+      },
+    },
+  },
+  {
+    $group: {
+      _id: "$_id.genre",
+      rated: {
+        $addToSet: {
+          rated: "$_id.rated",
+          best: "$best",
+          worst: "$worst",
+        },
+      },
+    },
+  },
+]);
