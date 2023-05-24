@@ -9,3 +9,82 @@ X-FOO: bar
     "name": "John Doe",
     "email": "t@t.com"
 }
+
+### USERS
+GET http://localhost:3000/users
+###
+GET http://localhost:3000/users/1
+###
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "email": "t@&t.com"
+}
+###
+GET http://localhost:3000/users/1684924289588
+###
+PUT http://localhost:3000/users/1
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "email": "t@t.com"
+}
+###
+PATCH http://localhost:3000/users/1
+Content-Type: application/json
+
+{
+    "name": "Jane Doe"
+}
+###
+PATCH http://localhost:3000/users/2
+Content-Type: application/json
+
+{
+    "name": "Jane Doe"
+}
+###
+DELETE http://localhost:3000/users/1
+
+
+### USERS2
+GET http://localhost:3000/users2
+###
+GET http://localhost:3000/users2/1
+###
+POST http://localhost:3000/users2
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "email": "t@&t.com"
+}
+###
+GET http://localhost:3000/users2/1684924739893
+###
+PUT http://localhost:3000/users2/1
+Content-Type: application/json
+
+{
+    "name": "John Doe",
+    "email": "t@t.com"
+}
+###
+PATCH http://localhost:3000/users2/1
+Content-Type: application/json
+
+{
+    "name": "Jane Doe"
+}
+###
+PATCH http://localhost:3000/users2/2
+Content-Type: application/json
+
+{
+    "name": "Jane Doe"
+}
+###
+DELETE http://localhost:3000/users2/1
