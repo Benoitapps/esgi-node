@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const GenericRouter = require("./routes/genericCRUD");
 const GenericController = require("./controllers/genericCRUD");
-const userService = require("./services/user-memory");
+const userService = require("./services/user");
 
 app.use(express.json());
 

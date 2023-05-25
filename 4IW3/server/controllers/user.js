@@ -1,4 +1,4 @@
-const userService = require("../services/user-memory");
+const userService = require("../services/user");
 
 module.exports = {
   cget: async (req, res, next) => {

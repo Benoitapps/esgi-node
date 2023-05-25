@@ -19,35 +19,37 @@ POST http://localhost:3000/users
 Content-Type: application/json
 
 {
-    "name": "John Doe",
-    "email": "t@&t.com"
+    "lastname": "John Doe",
+    "email": "t@t.com",
+    "password": "Azerty1234!"
 }
 ###
 GET http://localhost:3000/users/1684924289588
 ###
-PUT http://localhost:3000/users/1
+PUT http://localhost:3000/users/2
 Content-Type: application/json
 
 {
-    "name": "John Doe",
-    "email": "t@t.com"
+    "firstname": "John Doe",
+    "email": "t2@t.com",
+    "password": "Azerty1234!"
 }
 ###
 PATCH http://localhost:3000/users/1
 Content-Type: application/json
 
 {
-    "name": "Jane Doe"
+    "lastname": "Jane Doe"
 }
 ###
-PATCH http://localhost:3000/users/2
+PATCH http://localhost:3000/users/234256789
 Content-Type: application/json
 
 {
     "name": "Jane Doe"
 }
 ###
-DELETE http://localhost:3000/users/1
+DELETE http://localhost:3000/users/2
 
 
 ### USERS2
