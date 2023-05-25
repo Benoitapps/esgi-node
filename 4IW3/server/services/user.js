@@ -18,6 +18,7 @@ module.exports = {
     const [nb, users = []] = await User.update(data, {
       where: criteria,
       returning: true,
+      individualHooks: true,
     });
     console.log(nb, users);
     return users;

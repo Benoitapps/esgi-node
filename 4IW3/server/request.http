@@ -20,7 +20,7 @@ Content-Type: application/json
 
 {
     "lastname": "John Doe",
-    "email": "t@t.com",
+    "email": "t3@t.com",
     "password": "Azerty1234!"
 }
 ###
@@ -35,11 +35,11 @@ Content-Type: application/json
     "password": "Azerty1234!"
 }
 ###
-PATCH http://localhost:3000/users/1
+PATCH http://localhost:3000/users/3
 Content-Type: application/json
 
 {
-    "lastname": "Jane Doe"
+    "password": "Azerty1234!"
 }
 ###
 PATCH http://localhost:3000/users/234256789
@@ -90,3 +90,12 @@ Content-Type: application/json
 }
 ###
 DELETE http://localhost:3000/users2/1
+
+### SECURITY
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "email": "t3@t.com",
+    "password": "Azerty1234!"
+}

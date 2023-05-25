@@ -6,6 +6,8 @@ const userService = require("./services/user");
 
 app.use(express.json());
 
+app.use(require("./routes/security")(userService));
+
 app.use("/users", require("./routes/user"));
 app.use("/users2", new GenericRouter(new GenericController(userService)));
 

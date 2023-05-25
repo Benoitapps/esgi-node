@@ -1,7 +1,19 @@
 const { Model, DataTypes } = require("sequelize");
 
 module.exports = function (connection) {
-  class User extends Model {}
+  class User extends Model {
+    async checkPassword(password) {
+      const bcrypt = require("bcryptjs");
+      return bcrypt.compare(password, this.password);
+    }
+
+    generateToken() {
+      const jwt = require("jsonwebtoken");
+      return jwt.sign({ id: this.id }, process.env.JWT_SECRET, {
+        expiresIn: "1y",
+      });
+    }
+  }
 
   User.init(
     {
@@ -34,6 +46,19 @@ module.exports = function (connection) {
       tableName: "users",
     }
   );
+
+  async function encryptPassword(user, options) {
+    if (!options?.fields.includes("password")) {
+      return;
+    }
+    const bcrypt = require("bcryptjs");
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(user.password, salt);
+    user.password = hash;
+  }
+
+  User.addHook("beforeCreate", encryptPassword);
+  User.addHook("beforeUpdate", encryptPassword);
 
   return User;
 };
