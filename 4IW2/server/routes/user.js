@@ -1,13 +1,5 @@
-const { Router } = require("express");
-const userController = require("../controllers/user");
-const router = new Router();
+const genericRouter = require("./generic");
+const genericController = require("../controllers/generic");
+const UserService = require("../services/user");
 
-router.get("/", userController.getAll);
-router.post("/", userController.create);
-
-router.get("/:id", userController.getOne);
-router.put("/:id", userController.replace);
-router.patch("/:id", userController.update);
-router.delete("/:id", userController.delete);
-
-module.exports = router;
+module.exports = new genericRouter(new genericController(new UserService()));

@@ -1,6 +1,6 @@
 const express = require("express");
-const userRouter = require("./routes/user");
 const app = express();
+const UserRouter = require("./routes/user");
 
 app.use((req, res, next) => {
   if (
@@ -15,7 +15,7 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
-app.use("/users", userRouter);
+app.use("/users", UserRouter);
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
