@@ -19,6 +19,11 @@ Format: /{name_resource}s/{id_resource}/{name_resource2}s
 Examples:
 - /users/150/comments
 
+#### Action
+Format: /{action_verb}
+Examples:
+- /login
+
 
 ## Verbs
 
