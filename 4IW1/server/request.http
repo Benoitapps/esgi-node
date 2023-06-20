@@ -9,3 +9,60 @@ Content-Type: application/json
     "name": "John",
     "age": 30
 }
+
+###############
+## Users     ##
+###############
+## Get collection
+GET http://localhost:3000/users
+
+### POST collection with errors
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+    "firstname": "John",
+    "lastname": 30
+}
+### POST collection with success
+POST http://localhost:3000/users
+Content-Type: application/json
+
+{
+    "firstname": "John",
+    "lastname": "Doe",
+    "email": "t@t.com",
+    "password": "123456"
+}
+
+### Get item
+GET http://localhost:3000/users/3
+
+### PATCH item
+PATCH http://localhost:3000/users/1
+Content-Type: application/json
+
+{
+    "firstname": "Jane"
+}
+### PATCH item with errors
+PATCH http://localhost:3000/users/1
+Content-Type: application/json
+
+{
+    "email": "t"
+}
+
+### Delete item
+DELETE http://localhost:3000/users/1
+
+### PUT item
+PUT http://localhost:3000/users/1
+Content-Type: application/json
+
+{
+    "firstname": "Jane",
+    "lastname": "Doe",
+    "email": "t@t.com",
+    "password": "123456"
+}

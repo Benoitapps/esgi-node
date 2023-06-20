@@ -33,7 +33,7 @@ services:
       JWT_SECRET: ImAstrongSecret
     working_dir: /usr/src/app
     volumes:
-      - ./4IW3/server:/usr/src/app
+      - ./${CLASS}/server:/usr/src/app
     command: npm run dev
 
 volumes:
