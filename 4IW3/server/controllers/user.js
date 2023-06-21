@@ -21,6 +21,7 @@ module.exports = {
   },
   post: async (req, res, next) => {
     try {
+      console.log("post");
       const user = await userService.create(req.body);
       res.status(201).json(user);
     } catch (err) {

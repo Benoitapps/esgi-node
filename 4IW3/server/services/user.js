@@ -15,7 +15,7 @@ module.exports = {
   },
   create: async function (data) {
     try {
-      return User.create(data);
+      return await User.create(data);
     } catch (e) {
       if (e instanceof Sequelize.ValidationError) {
         throw ValidationError.createFromSequelizeValidationError(e);

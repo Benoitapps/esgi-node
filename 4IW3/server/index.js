@@ -4,7 +4,9 @@ const GenericRouter = require("./routes/genericCRUD");
 const GenericController = require("./controllers/genericCRUD");
 const userService = require("./services/user");
 const errorHandler = require("./middlewares/errorHandler");
+const cors = require("cors");
 
+app.use(cors());
 app.use(function (req, res, next) {
   if (["POST", "PUT", "PATCH"].includes(req.method)) {
     if (!req.is("application/json")) {
