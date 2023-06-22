@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const UserRouter = require("./routes/user");
+const ValidationError = require("./errors/ValidationError");
 
 app.use((req, res, next) => {
   if (
@@ -23,6 +24,15 @@ app.get("/", (req, res) => {
 
 app.post("/", (req, res) => {
   res.json(req.body);
+});
+
+app.use((err, req, res, next) => {
+  console.error(err);
+  if (err instanceof ValidationError) {
+    res.status(422).json(err.errors);
+  } else {
+    res.sendStatus(500);
+  }
 });
 
 app.listen(3000, () => {

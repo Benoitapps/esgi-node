@@ -58,7 +58,7 @@ module.exports = function UserService() {
       Object.assign(user, newData);
       return [user];
     },
-    delete: (filters) => {
+    delete: async (filters) => {
       let nbDeleted = 0;
       users = users.filter((user) => {
         if (

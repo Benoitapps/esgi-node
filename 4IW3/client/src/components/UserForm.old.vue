@@ -1,39 +1,41 @@
 <script setup>
-const { onSubmit, initialValues } = defineProps({
-  onSubmit: {
-    type: Function,
-    required: true
-  },
-  initialValues: {
-    type: Object
-  }
-});
-import { reactive, ref, watch } from 'vue';
+import { reactive, ref } from 'vue'
 
-const formData = reactive(
-  initialValues || {
-    lastname: '',
-    firstname: '',
-    email: '',
-    password: ''
-  }
-);
+const formData = reactive({
+  lastname: '',
+  firstname: '',
+  email: '',
+  password: ''
+})
 
-watch(initialValues, (newInitialValues) => {
-  Object.assign(formData, newInitialValues);
-});
-
-const errors = ref(null);
+const errors = ref(null)
 
 function handleSubmit(event) {
-  onSubmit(formData)
-    .then(() => {
-      event.target.reset();
+  let hasError = false
+  fetch('http://localhost:3000/users', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(formData)
+  })
+    .then((response) => {
+      if (response.status === 422) {
+        hasError = true
+      }
+      return response.json()
     })
-    .catch((_errors) => {
-      errors.value = _errors;
-    });
+    .then((data) => {
+      if (hasError) {
+        errors.value = data
+      } else {
+        console.log(data)
+        event.target.reset()
+      }
+    })
 }
+
+const numberInput = ref('')
 </script>
 <template>
   <form @submit.prevent="handleSubmit">
@@ -45,7 +47,6 @@ function handleSubmit(event) {
       id="lastname"
       name="lastname"
     />
-    <p v-if="errors?.lastname">{{ errors.lastname.join('\n') }}</p>
     <label for="firstname">Firstname</label>
     <input
       :value="formData.firstname"
@@ -54,8 +55,6 @@ function handleSubmit(event) {
       id="firstname"
       name="firstname"
     />
-    <p v-if="errors?.firstname">{{ errors.firstname.join('\n') }}</p>
-
     <label for="email">Email</label>
     <input
       :value="formData.email"
@@ -64,20 +63,13 @@ function handleSubmit(event) {
       id="email"
       name="email"
     />
-    <p v-if="errors?.email">{{ errors.email.join('\n') }}</p>
-
     <label for="password">Password</label>
     <input v-model="formData.password" type="password" id="password" name="password" />
-    <p v-if="errors?.password">{{ errors.password.join('\n') }}</p>
+    <input v-model.number.lazy.trim="numberInput" type="text" id="numberInput" name="numberInput" />
     <input type="submit" value="Submit" />
+    {{ errors }}
   </form>
+  {{ formData }}
+  {{ numberInput }} {{ typeof numberInput }}
+  {{ errors }}
 </template>
-
-<style scoped>
-label {
-  color: green;
-}
-p {
-  color: red;
-}
-</style>

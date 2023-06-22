@@ -1,10 +1,11 @@
 <script setup>
 // Vue3 Composition API
-import { reactive, ref } from 'vue'
-import HelloWorld from './components/HelloWorld.vue'
-import MyButton from './components/MyButton.vue'
-import TheWelcome from './components/TheWelcome.vue'
-import UserForm from './components/UserForm.vue'
+import { reactive, ref } from 'vue';
+import HelloWorld from './components/HelloWorld.vue';
+import MyButton from './components/MyButton.vue';
+import TheWelcome from './components/TheWelcome.vue';
+import UserForm from './components/UserForm.vue';
+import UserList from './views/UserList.vue';
 
 // Vue2 ou Vue3 Options API
 //export default {
@@ -18,7 +19,7 @@ const buttons = [
   { title: 'Click me 2', onClick: () => alert('coucou'), variant: 'round' },
   { title: 'Click me 3', onClick: () => confirm('?'), variant: 'square', disabled: true },
   { title: 'Click me 4', onClick: () => prompt('!') }
-]
+];
 const objButtons = {
   button1: {
     title: 'Click me 1'
@@ -37,22 +38,22 @@ const objButtons = {
   button4: {
     title: 'Toggle Yellow',
     onClick: () => {
-      isYellow.value = !isYellow.value
+      isYellow.value = !isYellow.value;
     }
   }
-}
-const showHelloWorld = false
-const deleteHelloWorld = true
+};
+const showHelloWorld = false;
+const deleteHelloWorld = true;
 
-const test = '<h1>Test</h1>'
-const isYellow = ref(true)
+const test = '<h1>Test</h1>';
+const isYellow = ref(true);
 const theme = reactive({
   main: 'red',
   wrapper: {
     backgroundColor: 'blue'
   }
-})
-console.log(isYellow)
+});
+console.log(isYellow);
 </script>
 
 <template>
@@ -79,6 +80,7 @@ console.log(isYellow)
         v-bind:onClick="item.onClick"
       />
     </div>
+    <UserList />
   </header>
 
   <main :style="{ backgroundColor: theme.main }">
@@ -100,6 +102,7 @@ header {
 @media (min-width: 1024px) {
   header {
     display: flex;
+    flex-direction: column;
     place-items: center;
     padding-right: calc(var(--section-gap) / 2);
   }
