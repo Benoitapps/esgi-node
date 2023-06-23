@@ -8,6 +8,10 @@ const { title, variant } = defineProps({
     type: String,
     default: 'default',
     validator: (val) => ['default', 'square', 'round'].includes(val)
+  },
+  onClick: {
+    type: Function,
+    default: () => {}
   }
 });
 
@@ -26,10 +30,60 @@ switch (variant) {
     style.borderRadius = '15px';
     break;
 }
+
+//function handleClick() {
+//  alert('You clicked me!');
+//}
+
+// Vue2
+// export default {
+//   name: 'Button',
+//   props: {
+//     title: {
+//       type: String,
+//       required: true
+//     },
+//     variant: {
+//       type: String,
+//       default: 'default',
+//       validator: (val) => ['default', 'square', 'round'].includes(val)
+//     }
+//   },
+//   methods() {
+//     handleClick() {
+//       alert('You clicked me!');
+//     }
+//   },
+//   computed() {
+//     style() {
+//       const style = {};
+//       switch (this.variant) {
+//         case 'square':
+//           style.borderRadius = '0';
+//           break;
+//         case 'round':
+//           style.borderRadius = '50%';
+//           break;
+//         default:
+//           style.borderRadius = '15px';
+//           break;
+//       }
+//       return style;
+//     },
+//     titleDisplayed() {
+//       if (this.variant === 'round') {
+//         return this.title[0];
+//       }
+//       return this.title;
+//     }
+//   }
+// };
 </script>
 
 <template>
-  <button v-bind:style="style" class="btn">{{ titleDisplayed.toUpperCase() }}</button>
+  <button v-bind:style="style" class="btn" v-on:click="onClick">
+    {{ titleDisplayed.toUpperCase() }}
+  </button>
 </template>
 
 <style scoped>

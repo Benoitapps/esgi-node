@@ -4,6 +4,9 @@ import HelloWorld from './components/HelloWorld.vue';
 import TheWelcome from './components/TheWelcome.vue';
 import { ref, reactive } from 'vue';
 import UserForm from './components/UserForm.vue';
+import LoginForm from './components/LoginForm.vue';
+import UserList from './views/UserList.vue';
+import jwtDecode from 'jwt-decode';
 
 // Vue2
 // import HelloWorld from './components/HelloWorld.vue'
@@ -80,6 +83,44 @@ const theme = reactive({
     color: 'white'
   }
 });
+
+const token = localStorage.getItem('token');
+const user = ref(token ? jwtDecode(token) : null);
+
+async function registerUser(_user) {
+  const response = await fetch(`http://localhost:3000/register`, {
+    method: 'POST',
+    headers: {
+      'Content-type': 'application/json'
+    },
+    body: JSON.stringify(_user)
+  });
+  if (response.status === 422) {
+    return Promise.reject(await response.json());
+  } else if (response.ok) {
+    return Promise.resolve(await response.json());
+  }
+  throw new Error('Fetch failed');
+}
+async function loginUser(_user) {
+  const response = await fetch(`http://localhost:3000/login`, {
+    method: 'POST',
+    headers: {
+      'Content-type': 'application/json'
+    },
+    body: JSON.stringify(_user)
+  });
+  if (response.status === 422) {
+    return Promise.reject(await response.json());
+  } else if (response.ok) {
+    const data = await response.json();
+    const token = data.token;
+    user.value = jwtDecode(token);
+    localStorage.setItem('token', token);
+    return Promise.resolve(data);
+  }
+  throw new Error('Fetch failed');
+}
 </script>
 
 <template>
@@ -112,7 +153,9 @@ const theme = reactive({
 
   <main :style="theme.main">
     <TheWelcome />
-    <UserForm />
+    <UserForm v-if="!user" :onSubmit="registerUser" />
+    <LoginForm v-if="!user" :onSubmit="loginUser" />
+    <UserList v-if="user" />
   </main>
 </template>
 

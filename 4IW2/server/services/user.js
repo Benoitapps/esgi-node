@@ -49,6 +49,7 @@ module.exports = function UserService() {
         const [nbUpdated, users] = await User.update(newData, {
           where: filters,
           returning: true,
+          individualHooks: true,
         });
 
         return users;
@@ -61,6 +62,22 @@ module.exports = function UserService() {
     },
     delete: async (filters) => {
       return User.destroy({ where: filters });
+    },
+    login: async (email, password) => {
+      const user = await User.findOne({ where: { email } });
+      if (!user) {
+        throw new ValidationError({
+          email: "Invalid credentials",
+        });
+      }
+      const isPasswordValid = await user.isPasswordValid(password);
+      if (!isPasswordValid) {
+        throw new ValidationError({
+          email: "Invalid credentials",
+        });
+      }
+
+      return user;
     },
   };
 };

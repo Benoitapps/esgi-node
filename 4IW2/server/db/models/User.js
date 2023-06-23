@@ -1,6 +1,11 @@
 module.exports = (connection) => {
   const { DataTypes, Model } = require("sequelize");
-  class User extends Model {}
+  const bcrypt = require("bcryptjs");
+  class User extends Model {
+    isPasswordValid(password) {
+      return bcrypt.compare(password, this.password);
+    }
+  }
 
   User.init(
     {
@@ -18,13 +23,31 @@ module.exports = (connection) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: {
-          //len: [8, 32],
+          len: [1, 32],
           //is: /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/,
         },
       },
     },
     { sequelize: connection, tableName: "users" }
   );
+
+  function updatePassword(user) {
+    return bcrypt.genSalt(10).then((salt) =>
+      bcrypt.hash(user.password, salt).then((hash) => {
+        user.password = hash;
+      })
+    );
+  }
+
+  User.addHook("beforeCreate", (user) => {
+    return updatePassword(user);
+  });
+
+  User.addHook("beforeUpdate", async (user, options) => {
+    if (options.fields.includes("password")) {
+      return updatePassword(user);
+    }
+  });
 
   return User;
 };
