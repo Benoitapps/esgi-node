@@ -1,7 +1,6 @@
 const ValidationError = require("../errors/ValidationError");
 const Sequelize = require("sequelize");
 const User = require("../db").User;
-console.log("***", User, typeof User, "***");
 
 module.exports = function () {
   return {
