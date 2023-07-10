@@ -8,6 +8,9 @@ const { onSubmit, initialValues } = defineProps({
     type: Object
   }
 });
+
+const emit = defineEmits(['submit']);
+
 import { reactive, ref, watch } from 'vue';
 
 const formData = reactive(
@@ -26,13 +29,11 @@ watch(initialValues, (newInitialValues) => {
 const errors = ref(null);
 
 function handleSubmit(event) {
-  onSubmit(formData)
-    .then(() => {
-      event.target.reset();
-    })
-    .catch((_errors) => {
-      errors.value = _errors;
-    });
+  if (!formData.lastname || !formData.firstname || !formData.email || !formData.password) {
+    alert('missing data');
+  } else {
+    emit('submit', formData);
+  }
 }
 </script>
 <template>

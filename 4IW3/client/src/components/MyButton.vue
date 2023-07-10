@@ -1,4 +1,7 @@
 <script setup>
+import { inject } from 'vue';
+import { themeKey } from '../contexts/themeKeys';
+
 const props = defineProps({
   title: {
     type: String,
@@ -8,25 +11,31 @@ const props = defineProps({
     type: String,
     default: 'default',
     validator: (value) => {
-      return ['default', 'square', 'round'].includes(value)
+      return ['default', 'square', 'round'].includes(value);
     }
   },
   onClick: {
     type: Function,
     default: () => {}
   }
-})
+});
+const theme = inject(themeKey);
 
-const style = {}
-let realTitle = props.title
-switch (props.variant) {
+const variant = props.variant === 'default' ? theme.button.variant : props.variant;
+
+const style = {
+  backgroundColor: theme.button.backgroundColor
+};
+
+let realTitle = props.title;
+switch (variant) {
   case 'square':
-    style.borderRadius = '0px'
-    break
+    style.borderRadius = '0px';
+    break;
   case 'round':
-    style.borderRadius = '50%'
-    realTitle = realTitle[0].toUpperCase()
-    break
+    style.borderRadius = '50%';
+    realTitle = realTitle[0].toUpperCase();
+    break;
 }
 </script>
 
