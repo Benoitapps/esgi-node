@@ -1,27 +1,40 @@
 <script setup>
-import { reactive, ref } from 'vue';
-const { onSubmit } = defineProps({
-  onSubmit: {
-    type: Function,
-    required: true
-  }
-});
 const defaultValue = {
   lastname: '',
   firstname: '',
   email: '',
   password: ''
 };
-const formData = reactive({ ...defaultValue });
+import { reactive, ref } from 'vue';
+const { initialValues } = defineProps({
+  initialValues: {
+    type: Object,
+    default: () => ({
+      lastname: '',
+      firstname: '',
+      email: '',
+      password: ''
+    })
+  }
+});
+
+//defineEmits(['submit']);
+const emit = defineEmits({
+  submit: (event) => {
+    if(event.email === "") {
+      throw new Error("Email is required");
+    }
+    if(event.password === "") {
+      throw new Error("Password is required");
+    }
+  }
+})
+
+const formData = reactive({ ...initialValues });
 const errors = ref({});
 
 function handleSubmit() {
-  onSubmit(formData)
-    .then(() => {
-      Object.assign(formData, defaultValue);
-      errors.value = {};
-    })
-    .catch((_errors) => (errors.value = _errors));
+  emit('submit', formData)
 }
 </script>
 

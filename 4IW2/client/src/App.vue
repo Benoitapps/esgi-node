@@ -7,6 +7,8 @@ import UserForm from './components/UserForm.vue';
 import LoginForm from './components/LoginForm.vue';
 import UserList from './views/UserList.vue';
 import jwtDecode from 'jwt-decode';
+import Modal from './components/Modal.vue';
+import ThemeProvider from './contexts/ThemeProvider.vue';
 
 // Vue2
 // import HelloWorld from './components/HelloWorld.vue'
@@ -61,9 +63,9 @@ const objButtons = {
     disabled: false
   },
   button2: {
-    title: 'Click Me 2',
+    title: 'ToggleModal',
     variant: 'square',
-    onClick: handleClick2,
+    onClick: () => (openModal.value = !openModal.value),
     disabled: false
   },
   button3: {
@@ -77,12 +79,6 @@ const objButtons = {
 const showWelcome = true;
 const addWelcome = true;
 const isYellow = ref(false);
-const theme = reactive({
-  main: {
-    backgroundColor: 'red',
-    color: 'white'
-  }
-});
 
 const token = localStorage.getItem('token');
 const user = ref(token ? jwtDecode(token) : null);
@@ -124,39 +120,56 @@ async function loginUser(_user) {
 </script>
 
 <template>
-  <header :style="{ backgroundColor: isYellow ? 'yellow' : 'inherit' }">
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+  <ThemeProvider #default="{theme}">
+    <header :style="{ backgroundColor: isYellow ? 'yellow' : 'inherit' }">
+      <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" v-if="addWelcome" />
-      <HelloWorld msg="You did it 2!" v-show="showWelcome" />
-    </div>
-    <button @click="isYellow = !isYellow">toggle yellow</button>
-    <Button title="Click Me 2" variant="square" v-bind:onClick="handleClick2" />
-    <Button title="Click Me 3" variant="round" :onClick="handleClick3" />
-    <Button
-      v-for="(button, index) in arrayButtons"
-      :key="index"
-      :title="button.title"
-      :variant="button.variant"
-      :onClick="button.onClick"
-    />
-    <template v-for="(button, key, index) in objButtons" :key="key">
-      <Button
-        :title="button.title + ' ' + key + ' ' + index"
-        :variant="button.variant"
-        :onClick="button.onClick"
-        v-if="!button.disabled"
-      />
-    </template>
-  </header>
+      <div class="wrapper">
+        <HelloWorld msg="You did it!" v-if="addWelcome" />
+        <HelloWorld msg="You did it 2!" v-show="showWelcome" />
+        <button @click="isYellow = !isYellow">toggle yellow</button>
+        <Button title="Click Me 2" variant="square" v-bind:onClick="handleClick2" />
+        <Button title="Click Me 3" variant="round" :onClick="handleClick3" />
+        <Button
+          v-for="(button, index) in arrayButtons"
+          :key="index"
+          :title="button.title"
+          :variant="button.variant"
+          :onClick="button.onClick"
+        />
+        <template v-for="(button, key, index) in objButtons" :key="key">
+          <Button
+            :title="button.title + ' ' + key + ' ' + index"
+            :variant="button.variant"
+            :onClick="button.onClick"
+            v-if="!button.disabled"
+          />
+        </template>
+      </div>
+      <Modal>
+        <template #activator="{ openModal }">
+          <button @click="openModal">Open Modal from App</button>
+        </template>
+        <template #actions="{ closeModal }">
+          <button @click="closeModal">Close from App</button>
+        </template>
+        <template v-slot:title>
+          <h1>Coucou from App</h1>
+        </template>
+        <h1>Body from App</h1>
+      </Modal>
+    </header>
 
-  <main :style="theme.main">
-    <TheWelcome />
-    <UserForm v-if="!user" :onSubmit="registerUser" />
-    <LoginForm v-if="!user" :onSubmit="loginUser" />
-    <UserList v-if="user" />
-  </main>
+    <main :style="theme.main">
+      <TheWelcome />
+      <h2>Login Form</h2>
+      <LoginForm v-if="!user" :onSubmit="loginUser" />
+      <h2>Register Form</h2>
+      <UserForm v-if="!user" @submit="registerUser" />
+      <h2>User List</h2>
+      <UserList v-if="user" />
+    </main>
+  </ThemeProvider>
 </template>
 
 <style scoped>

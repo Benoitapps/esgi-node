@@ -1,4 +1,6 @@
 <script setup>
+import { inject } from 'vue';
+
 const { title, variant } = defineProps({
   title: {
     type: String,
@@ -17,7 +19,12 @@ const { title, variant } = defineProps({
   }
 });
 
-const style = {};
+const getThemeValue = inject('getThemeValue');
+
+const style = {
+  backgroundColor: getThemeValue('button.backgroundColor'),
+  color: getThemeValue('button.color')
+};
 let realTitle = title;
 switch (variant) {
   case 'square':
