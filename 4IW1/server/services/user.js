@@ -4,7 +4,10 @@ const User = require("../db").User;
 
 module.exports = function () {
   return {
-    async findAll(criteria, { page = null, itemsPerPage = null, order = {} }) {
+    async findAll(
+      criteria,
+      { page = null, itemsPerPage = null, order = {} } = {}
+    ) {
       return await User.findAll({
         where: criteria,
         limit: itemsPerPage,
@@ -44,8 +47,9 @@ module.exports = function () {
         const [nbUpdated, newValues] = await User.update(newData, {
           where: { id },
           returning: true,
+          individualHooks: true,
         });
-        if (nbUpdated === 0) {
+        if (nbUpdated === 0 && !newValues.length) {
           return null;
         }
         return newValues[0];

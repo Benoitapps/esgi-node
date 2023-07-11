@@ -3,6 +3,7 @@ import Button from './components/Button.vue';
 import HelloWorld from './components/HelloWorld.vue';
 import TheWelcome from './components/TheWelcome.vue';
 import { ref, reactive } from 'vue';
+import UserForm from './components/UserForm.vue';
 
 const isYellow = ref(false);
 const theme = reactive({
@@ -91,11 +92,43 @@ const objButtons = {
 
 const addHello = ref(false);
 const showHello = ref(false);
+
+function addUser(data) {
+  let hasError = false;
+  return fetch('http://localhost:3000/users', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+    .then((response) => {
+      if (response.status === 422) {
+        hasError = true;
+      }
+      return response.json();
+    })
+    .then((data) => {
+      if (hasError) {
+        return Promise.reject(data);
+      } else {
+        return Promise.resolve(data);
+      }
+    });
+}
 </script>
 
 <template>
   <header :style="{ backgroundColor: isYellow ? 'yellow' : 'inherit' }">
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+    <img
+      alt="Vue logo"
+      class="logo"
+      src="./assets/logo.svg"
+      width="125"
+      height="125"
+      v-test:TREFDSB.click="'GDFSGDRS32534'"
+    />
+    <MyTest />
 
     <div class="wrapper">
       <HelloWorld v-if="addHello" msg="You did it!" />
@@ -118,6 +151,7 @@ const showHello = ref(false);
           v-if="!item.disabled"
         />
       </template>
+      <UserForm :on-submit="addUser" />
     </div>
   </header>
 

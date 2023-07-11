@@ -29,10 +29,10 @@ POST http://localhost:3000/users
 Content-Type: application/json
 
 {
-    "firstname": "John",
-    "lastname": "Doe",
+    "firstname": "Johdazefrgtn",
+    "lastname": "Ddsfgoee",
     "email": "t@t.com",
-    "password": "123456"
+    "password": "12345678"
 }
 
 ### Get item
@@ -43,14 +43,14 @@ PATCH http://localhost:3000/users/1
 Content-Type: application/json
 
 {
-    "firstname": "Jane"
+    "firstn_ame": "Jane"
 }
 ### PATCH item with errors
-PATCH http://localhost:3000/users/1
+PATCH http://localhost:3000/users/8
 Content-Type: application/json
 
 {
-    "email": "t"
+    "lastname": "dsqfvdfghj"
 }
 
 ### Delete item
@@ -59,10 +59,20 @@ DELETE http://localhost:3000/users/1
 ### PUT item
 PUT http://localhost:3000/users/1
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNjg5MDAyMTU0fQ.TMChGd4KMEE9Bcs2TcIU8-BeuAjtwR0MxnwgcBeLHgU
 
 {
     "firstname": "Jane",
     "lastname": "Doe",
     "email": "t@t.com",
-    "password": "123456"
+    "password": "12345678"
+}
+
+### Login
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{
+    "email": "t@t.com",
+    "password": "12345678"
 }
