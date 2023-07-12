@@ -1,0 +1,4 @@
+validator: (val) => ['default', 'square', 'round'].includes(val) // le role d'un enum
+
+const emit = defineEmits(['click', 'hover', 'change']);//emit regroupe les differents evenement possible 
+
