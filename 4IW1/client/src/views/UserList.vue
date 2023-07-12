@@ -51,7 +51,7 @@ async function editUser(user) {
 
 <template>
   <ul>
-    <UserItem @select="userSelected = $event" v-for="user in users" @delete="deleteUser($event)" :key="user.id" />
+    <slot name="item" v-for="user in users" :key="user.id"><UserItem @select="userSelected = $event" @delete="deleteUser($event)" :user="user" /></slot>
   </ul>
   <p>User selected : {{ userSelected }}</p>
   <UserForm v-if="userSelected" :on-submit="editUser" :initialValues="userSelected" />

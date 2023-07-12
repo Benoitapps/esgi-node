@@ -17,7 +17,7 @@ const theme = reactive({
 });
 
 function handleClick1() {
-  openModal.value = !openModal.value;
+  alert('You clicked me!');
 }
 function handleClick2() {
   theme.main.backgroundColor = theme.main.backgroundColor === 'blue' ? 'green' : 'blue';
@@ -193,8 +193,6 @@ function handleHover() {
 function handleChange(e) {
   console.log('change', e);
 }
-
-const openModal = ref(false);
 </script>
 
 <template>
@@ -212,7 +210,12 @@ const openModal = ref(false);
     <div class="wrapper">
       <HelloWorld v-if="addHello" msg="You did it!" />
       <HelloWorld v-show="showHello" msg="You did it2!" />
-      <Button title="Open Modal" @click="handleClick1" @hover="handleHover" @change="handleChange" />
+      <Button
+        title="Open Modal"
+        @click="handleClick1"
+        @hover="handleHover"
+        @change="handleChange"
+      />
       <Button title="Toggle main theme" variant="round" @click="handleClick2" />
       <Button title="Toggle yellow" variant="square" @click="handleClick3" />
       <Button
@@ -230,6 +233,18 @@ const openModal = ref(false);
           v-if="!item.disabled"
         />
       </template>
+      <Modal>
+        <template #activator="{ openModal }">
+          <Button title="Open Modal" @click="openModal" />
+        </template>
+        <template v-slot:actions="{ closeModal }">
+          <Button title="Close From App" @click="closeModal" />
+        </template>
+        Content from App
+        <template #close-icon="{ closeModal }">
+          <Button title="X" @click="closeModal" />
+        </template>
+      </Modal>
       <template v-if="user === null">
         <h1>Login</h1>
         <LoginForm :on-submit="login" />
@@ -239,8 +254,14 @@ const openModal = ref(false);
       <div v-else>
         Connected as {{ user.email }}
         <Button title="Logout" @click="logout" />
-        <h1>User list</h1>
+        <h1>User list (li)</h1>
         <UserList />
+        <h1>User list (span)</h1>
+        <UserList>
+          <template #item>
+            <span>Custom item</span>
+          </template>
+        </UserList>
       </div>
     </div>
   </header>
@@ -248,7 +269,6 @@ const openModal = ref(false);
   <main :style="theme.main">
     <TheWelcome />
   </main>
-  <Modal :open="openModal" @close="openModal = !openModal"/>
 </template>
 
 <style scoped>

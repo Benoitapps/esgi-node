@@ -1,18 +1,33 @@
 <script setup>
+import { ref } from 'vue';
+
 defineProps({
-  open: Boolean
+  title: { type: String, default: 'Modal Title' }
 });
 
-defineEmits(['close']);
+const openModal = ref(false);
+
+function toggleModal() {
+  openModal.value = !openModal.value;
+}
 </script>
 
 <template>
-  <div v-show="open" class="modal">
-    <div class="backdrop" @click.self="$emit('close')"></div>
+  <slot name="activator" :openModal="toggleModal"
+    ><button @click="toggleModal">Open Modal</button></slot
+  >
+  <div v-show="openModal" class="modal">
+    <div class="backdrop" @click.self="toggleModal"></div>
     <div class="modal-box">
-      <div class="modal-title">Title</div>
-      <div class="modal-content">Content</div>
-      <div class="modal-actions"><button @click="$emit('close')">Close</button></div>
+      <div class="modal-title">
+        {{ title }}<slot name="close-icon" :closeModal="toggleModal"></slot>
+      </div>
+      <div class="modal-content"><slot>Content</slot></div>
+      <div class="modal-actions">
+        <slot name="actions" :closeModal="toggleModal"
+          ><button @click="toggleModal">Close</button></slot
+        >
+      </div>
     </div>
   </div>
 </template>
@@ -59,7 +74,9 @@ defineEmits(['close']);
   padding: 1rem;
   font-size: 1.5rem;
   font-weight: bold;
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .modal-content {
