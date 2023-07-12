@@ -15,6 +15,8 @@ const { title, variant } = defineProps({
   }
 });
 
+const emit = defineEmits(['click', 'hover', 'change']);
+
 const style = {};
 let titleDisplayed = title;
 
@@ -78,10 +80,20 @@ switch (variant) {
 //     }
 //   }
 // };
+
+function handleClick(event) {
+  emit('change', Object.assign(event, { value: title }));
+}
 </script>
 
 <template>
-  <button v-bind:style="style" class="btn" v-on:click="onClick">
+  <button
+    v-bind:style="style"
+    class="btn"
+    v-on:click="$emit('click')"
+    @mouseover="$emit('hover')"
+    @click="handleClick"
+  >
     {{ titleDisplayed.toUpperCase() }}
   </button>
 </template>

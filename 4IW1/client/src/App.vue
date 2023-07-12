@@ -2,8 +2,11 @@
 import Button from './components/Button.vue';
 import HelloWorld from './components/HelloWorld.vue';
 import TheWelcome from './components/TheWelcome.vue';
-import { ref, reactive } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import UserForm from './components/UserForm.vue';
+import LoginForm from './components/LoginForm.vue';
+import UserList from './views/UserList.vue';
+import Modal from './components/Modal.vue';
 
 const isYellow = ref(false);
 const theme = reactive({
@@ -14,7 +17,7 @@ const theme = reactive({
 });
 
 function handleClick1() {
-  alert('You clicked me!');
+  openModal.value = !openModal.value;
 }
 function handleClick2() {
   theme.main.backgroundColor = theme.main.backgroundColor === 'blue' ? 'green' : 'blue';
@@ -27,6 +30,9 @@ function handleClick3() {
 // import HelloWorld from './components/HelloWorld.vue';
 // import TheWelcome from './components/TheWelcome.vue';
 // export default {
+//   beforeCreate() {
+//     console.log('beforeCreate');
+//   },
 //   components: {
 //     HelloWorld,
 //     TheWelcome,
@@ -116,6 +122,79 @@ function addUser(data) {
       }
     });
 }
+function register(data) {
+  let hasError = false;
+  return fetch('http://localhost:3000/register', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+    .then((response) => {
+      if (response.status === 422) {
+        hasError = true;
+      }
+      return response.json();
+    })
+    .then((data) => {
+      if (hasError) {
+        return Promise.reject(data);
+      } else {
+        return Promise.resolve(data);
+      }
+    });
+}
+
+const user = ref(null);
+
+onMounted(() => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    user.value = JSON.parse(atob(token.split('.')[1]));
+  }
+});
+
+function login({ email, password }) {
+  let hasError = false;
+  return fetch('http://localhost:3000/login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ email, password })
+  })
+    .then((response) => {
+      if (response.status === 422) {
+        hasError = true;
+      }
+      return response.json();
+    })
+    .then((data) => {
+      if (hasError) {
+        return Promise.reject(data);
+      } else {
+        const token = data.token;
+        localStorage.setItem('token', token);
+        user.value = JSON.parse(atob(token.split('.')[1]));
+        return Promise.resolve(data);
+      }
+    });
+}
+
+function logout() {
+  localStorage.removeItem('token');
+  user.value = null;
+}
+
+function handleHover() {
+  console.log('hover');
+}
+function handleChange(e) {
+  console.log('change', e);
+}
+
+const openModal = ref(false);
 </script>
 
 <template>
@@ -133,31 +212,43 @@ function addUser(data) {
     <div class="wrapper">
       <HelloWorld v-if="addHello" msg="You did it!" />
       <HelloWorld v-show="showHello" msg="You did it2!" />
-      <Button title="Click 1" :onClick="handleClick1" />
-      <Button title="Toggle main theme" variant="round" :onClick="handleClick2" />
-      <Button title="Toggle yellow" variant="square" :onClick="handleClick3" />
+      <Button title="Open Modal" @click="handleClick1" @hover="handleHover" @change="handleChange" />
+      <Button title="Toggle main theme" variant="round" @click="handleClick2" />
+      <Button title="Toggle yellow" variant="square" @click="handleClick3" />
       <Button
         v-for="(item, index) in arrayButtons"
         :key="index"
         :title="item.title"
         :variant="item.variant"
-        :onClick="item.onClick"
+        @click="item.onClick"
       />
       <template v-for="(item, property, index) in objButtons" :key="property">
         <Button
           :title="item.title + '' + property + ' ' + index"
           :variant="item.variant"
-          :onClick="item.onClick"
+          @click="item.onClick"
           v-if="!item.disabled"
         />
       </template>
-      <UserForm :on-submit="addUser" />
+      <template v-if="user === null">
+        <h1>Login</h1>
+        <LoginForm :on-submit="login" />
+        <h1>Register</h1>
+        <UserForm :on-submit="register" />
+      </template>
+      <div v-else>
+        Connected as {{ user.email }}
+        <Button title="Logout" @click="logout" />
+        <h1>User list</h1>
+        <UserList />
+      </div>
     </div>
   </header>
 
   <main :style="theme.main">
     <TheWelcome />
   </main>
+  <Modal :open="openModal" @close="openModal = !openModal"/>
 </template>
 
 <style scoped>

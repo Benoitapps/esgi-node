@@ -39,12 +39,14 @@ Content-Type: application/json
 GET http://localhost:3000/users/3
 
 ### PATCH item
-PATCH http://localhost:3000/users/1
+PATCH http://localhost:3000/users/4
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NCwiZW1haWwiOiJ0MkB0LmNvbSIsImlhdCI6MTY4OTE3NDM5M30.-SH4mwXw8KZ8FvUFYjwRetgqhDm7OHPzvnMItC661GQ
 
 {
-    "firstn_ame": "Jane"
+    "lastname": "testFDFER"
 }
+
 ### PATCH item with errors
 PATCH http://localhost:3000/users/8
 Content-Type: application/json

@@ -1,5 +1,6 @@
+const ValidationError = require("../errors/ValidationError");
+
 module.exports = function SecurityController(UserService) {
-  const UnauthorizedError = require("../errors/UnauthorizedError");
   const bcrypt = require("bcryptjs");
   const jwt = require("jsonwebtoken");
   return {
@@ -9,17 +10,17 @@ module.exports = function SecurityController(UserService) {
       });
 
       if (!user) {
-        return next(new UnauthorizedError());
+        return next(new ValidationError({ email: ["Invalid credentials"] }));
       }
 
       //test password
       if (!(await bcrypt.compare(req.body.password, user.password))) {
-        return next(new UnauthorizedError());
+        return next(new ValidationError({ email: ["Invalid credentials"]}));
       }
 
       //create token
       res.json({
-        token: jwt.sign({ id: user.id }, process.env.JWT_SECRET),
+        token: jwt.sign({ id: user.id, /* A JAMAIS FAIRE */email: user.email }, process.env.JWT_SECRET),
       });
     },
   };

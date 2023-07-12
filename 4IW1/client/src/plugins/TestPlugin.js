@@ -14,7 +14,6 @@ export default {
       }
     });
     VueInstance.component('MyTest', MyTest);
-    VueInstance.prototype.$coucou = 'coucou';
     VueInstance.provide('coucou', 'coucou');
   }
 };

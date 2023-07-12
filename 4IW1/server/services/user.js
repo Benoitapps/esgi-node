@@ -44,11 +44,13 @@ module.exports = function () {
     },
     async updateOne(id, newData) {
       try {
+        console.log(id, newData);
         const [nbUpdated, newValues] = await User.update(newData, {
           where: { id },
           returning: true,
           individualHooks: true,
         });
+        console.log(nbUpdated, newValues);
         if (nbUpdated === 0 && !newValues.length) {
           return null;
         }

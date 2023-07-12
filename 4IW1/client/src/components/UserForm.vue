@@ -1,16 +1,20 @@
 <script setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref, unref } from 'vue';
 
 const props = defineProps({
-  onSubmit: Function
+  onSubmit: Function,
+  initialValues: {
+    type: Object,
+    default: () => ({
+      lastname: '',
+      firstname: '',
+      email: '',
+      password: ''
+    })
+  }
 });
 
-const formData = reactive({
-  lastname: '',
-  firstname: '',
-  email: '',
-  password: ''
-});
+const formData = reactive({ ...props.initialValues });
 const errors = ref({});
 
 const isSubmitting = ref(false);
@@ -19,6 +23,14 @@ function handleSubmit() {
   isSubmitting.value = true;
   props
     .onSubmit(formData)
+    .then(() => {
+      Object.assign(formData, {
+        lastname: '',
+        firstname: '',
+        email: '',
+        password: ''
+      });
+    })
     .catch((_errors) => {
       errors.value = _errors;
     })
