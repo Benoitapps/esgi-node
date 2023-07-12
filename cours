@@ -2,3 +2,50 @@ validator: (val) => ['default', 'square', 'round'].includes(val) // le role d'un
 
 const emit = defineEmits(['click', 'hover', 'change']);//emit regroupe les differents evenement possible 
 
+function handleClick(event) {         emit('change', Object.assign(event, { value: title }));      }// cree un nouvel objet en fusonnatn a l'event la value 
+//En résumé, la fonction handleClick utilise emit pour émettre l'événement 'change' avec un objet d'événement contenant la valeur actuelle de title.
+// Cela permet de transmettre des informations supplémentaires lors de l'émission de l'événement.
+
+//Quand on voit des ":...." ce sont des v-bind et sont dse racourcis exemple : v-bind:class = :class     : attribut dinamiquement une valeur de chaine et unidirectionnel
+//Quand on voit des "@...." ce sont des v-on   et sont des racourvis exemple : v-on:click = @click       : ecouter des evenement du dom 
+
+const theme = reactive({
+    main: {
+      color: 'red',
+      backgroundColor: 'blue'
+    }
+  });
+  //Lorsque vous utilisez la fonction reactive, chaque propriété de l'objet devient réactive, ce qui signifie que vous pouvez les utiliser dans votre template 
+  //ou dans votre code JavaScript et qu'elles seront automatiquement mises à jour lorsque leur valeur changera.
+
+  <template>
+  <form @submit.prevent="handleSubmit"
+  </template>
+  //le @submit est cense recharger la page quand le formulaire est remplie 
+  //le .prevent y est ajouter pour annuler le rechargement 
+
+  v-model // : peut être utilisé sur un composant pour implémenter une liaison bidirectionnelle.
+
+  <Button
+  v-for="(item, index) in arrayButtons"
+  :key="index"
+  :title="item.title"
+  :variant="item.variant"
+  @click="item.onClick"
+>
+
+// :key="index" : Il s'agit d'une directive spéciale qui assure une identification unique pour chaque élément lors de l'itération, en utilisant l'index de l'élément dans le tableau.
+
+<template v-for="(item, property, index) in objButtons" :key="property">
+        <Button
+          :title="item.title + '' + property + ' ' + index"
+          :variant="item.variant"
+          @click="item.onClick"
+          v-if="!item.disabled"
+        />
+</template>
+
+//:key="property" : Il s'agit d'une directive spéciale qui assure une identification unique pour chaque élément lors de l'itération, en utilisant le nom de la propriété de l'objet. 
+//:title="item.title + '' + property + ' ' + index" : Cela lie la propriété title de chaque élément de l'objet à la prop title du composant Button.
+// Ainsi, chaque bouton affichera un titre composé du titre de l'élément, suivi de la propriété, puis de l'index correspondant dans l'objet.
+
