@@ -1,5 +1,6 @@
 <script setup>
 import { inject } from 'vue';
+import { getThemeValueKey } from '../contexts/ThemeProviderKeys';
 
 const { title, variant } = defineProps({
   title: {
@@ -19,7 +20,7 @@ const { title, variant } = defineProps({
   }
 });
 
-const getThemeValue = inject('getThemeValue');
+const getThemeValue = inject(getThemeValueKey);
 
 const style = {
   backgroundColor: getThemeValue('button.backgroundColor'),

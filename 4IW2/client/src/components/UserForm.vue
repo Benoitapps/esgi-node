@@ -6,7 +6,7 @@ const defaultValue = {
   password: ''
 };
 import { reactive, ref } from 'vue';
-const { initialValues } = defineProps({
+const { initialValues, errors } = defineProps({
   initialValues: {
     type: Object,
     default: () => ({
@@ -15,8 +15,14 @@ const { initialValues } = defineProps({
       email: '',
       password: ''
     })
+  },
+  errors: {
+    type: Object,
+    default: () => ({})
   }
 });
+
+console.log(errors);
 
 //defineEmits(['submit']);
 const emit = defineEmits({
@@ -31,7 +37,6 @@ const emit = defineEmits({
 })
 
 const formData = reactive({ ...initialValues });
-const errors = ref({});
 
 function handleSubmit() {
   emit('submit', formData)

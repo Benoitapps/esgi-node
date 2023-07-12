@@ -7,7 +7,7 @@ module.exports = function SecurityController(UserService) {
         const { email, password } = req.body;
         const user = await UserService.login(email, password);
         const token = jwt.sign(
-          { id: user.id, fullName: user.lastname + " " + user.firstname },
+          { id: user.id, firstname: user.firstname, lastname: user.lastname, fullName: user.lastname + " " + user.firstname },
           process.env.JWT_SECRET,
           {
             expiresIn: "1h",

@@ -1,5 +1,6 @@
 <script setup>
 import { provide, reactive } from 'vue';
+import { getThemeValueKey, setThemeValueKey, themeKey } from './ThemeProviderKeys';
 
 const theme = reactive({
   main: {
@@ -12,8 +13,8 @@ const theme = reactive({
   }
 });
 
-provide('theme', theme);
-provide('setThemeValue', (path, value) => {
+provide(themeKey, theme);
+provide(setThemeValueKey, (path, value) => {
   const paths = path.split('.');
   let current = theme;
   for (let i = 0; i < paths.length - 1; i++) {
@@ -21,7 +22,7 @@ provide('setThemeValue', (path, value) => {
   }
   current[paths[paths.length - 1]] = value;
 });
-provide('getThemeValue', (path) => {
+provide(getThemeValueKey, (path) => {
   const paths = path.split('.');
   let current = theme;
   for (let i = 0; i < paths.length - 1; i++) {
