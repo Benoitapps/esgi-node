@@ -55,9 +55,10 @@ console.log(isYellow);
 
 <template>
   <ThemeProvider #default="{ theme, setThemeValue }">
+    <UserProvider>
     <UserManager>
       <header :style="{ backgroundColor: isYellow ? 'yellow' : 'inherit' }">
-        <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+        <img v-test:COUCOU.click="'EXSCDFS'" alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
 
         <div class="wrapper" :style="{ backgroundColor: theme.wrapper.backgroundColor }">
           <HelloWorld msg="You did it!" v-if="!deleteHelloWorld" v-show="showHelloWorld" />
@@ -106,6 +107,7 @@ console.log(isYellow);
           <h2>Test</h2>
         </Modal>
         <UserList />
+        <CreditCard/>
       </header>
 
       <main :style="{ backgroundColor: theme.main }">
