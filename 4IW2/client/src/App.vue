@@ -11,6 +11,7 @@ import Modal from './components/Modal.vue';
 import ThemeProvider from './contexts/ThemeProvider.vue';
 import AuthProvider from './contexts/AuthProvider.vue';
 import UserProfile from './views/UserProfile.vue';
+import PostList from './views/PostList.vue';
 
 // Vue2
 // import HelloWorld from './components/HelloWorld.vue'
@@ -131,7 +132,7 @@ async function registerUser(_user) {
         </div>
         <Modal>
           <template #activator="{ openModal }">
-            <button @click="openModal">Open Modal from App</button>
+            <button v-on:click="openModal">Open Modal from App</button>
           </template>
           <template #actions="{ closeModal }">
             <button @click="closeModal">Close from App</button>
@@ -149,13 +150,15 @@ async function registerUser(_user) {
           <h2>Login Form</h2>
           <LoginForm :onSubmit="login" />
           <h2>Register Form</h2>
-          <UserForm @submit="registerUser" :errors="registerErrors"/>
+          <UserForm @submit="registerUser" :errors="registerErrors" />
         </template>
         <template v-if="user">
           <UserProfile />
           <h2>User List</h2>
           <UserList />
         </template>
+        <h2>Post List</h2>
+        <PostList />
       </main>
     </AuthProvider>
   </ThemeProvider>

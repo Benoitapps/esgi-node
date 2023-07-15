@@ -1,4 +1,6 @@
 <script setup>
+import { inject } from 'vue';
+
 const { title, variant } = defineProps({
   title: {
     type: String,
@@ -17,7 +19,10 @@ const { title, variant } = defineProps({
 
 const emit = defineEmits(['click', 'hover', 'change']);
 
-const style = {};
+const getThemeValue = inject('getThemeValue')
+const defaultStyle = getThemeValue('button');
+
+const style = defaultStyle;
 let titleDisplayed = title;
 
 switch (variant) {

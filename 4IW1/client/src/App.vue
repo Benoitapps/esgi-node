@@ -7,20 +7,18 @@ import UserForm from './components/UserForm.vue';
 import LoginForm from './components/LoginForm.vue';
 import UserList from './views/UserList.vue';
 import Modal from './components/Modal.vue';
+import ThemeProvider from './providers/ThemeProvider.vue';
+import AuthProvider from './providers/AuthProvider.vue';
+import Security from './views/Security.vue';
+import SecuredZone from './views/SecuredZone.vue';
 
 const isYellow = ref(false);
-const theme = reactive({
-  main: {
-    color: 'red',
-    backgroundColor: 'blue'
-  }
-});
 
 function handleClick1() {
   alert('You clicked me!');
 }
-function handleClick2() {
-  theme.main.backgroundColor = theme.main.backgroundColor === 'blue' ? 'green' : 'blue';
+function handleClick2(theme, setThemeValue) {
+  setThemeValue('main.backgroundColor', theme.main.backgroundColor === 'blue' ? 'green' : 'blue');
 }
 function handleClick3() {
   isYellow.value = !isYellow.value;
@@ -122,70 +120,6 @@ function addUser(data) {
       }
     });
 }
-function register(data) {
-  let hasError = false;
-  return fetch('http://localhost:3000/register', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-  })
-    .then((response) => {
-      if (response.status === 422) {
-        hasError = true;
-      }
-      return response.json();
-    })
-    .then((data) => {
-      if (hasError) {
-        return Promise.reject(data);
-      } else {
-        return Promise.resolve(data);
-      }
-    });
-}
-
-const user = ref(null);
-
-onMounted(() => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    user.value = JSON.parse(atob(token.split('.')[1]));
-  }
-});
-
-function login({ email, password }) {
-  let hasError = false;
-  return fetch('http://localhost:3000/login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ email, password })
-  })
-    .then((response) => {
-      if (response.status === 422) {
-        hasError = true;
-      }
-      return response.json();
-    })
-    .then((data) => {
-      if (hasError) {
-        return Promise.reject(data);
-      } else {
-        const token = data.token;
-        localStorage.setItem('token', token);
-        user.value = JSON.parse(atob(token.split('.')[1]));
-        return Promise.resolve(data);
-      }
-    });
-}
-
-function logout() {
-  localStorage.removeItem('token');
-  user.value = null;
-}
 
 function handleHover() {
   console.log('hover');
@@ -196,79 +130,67 @@ function handleChange(e) {
 </script>
 
 <template>
-  <header :style="{ backgroundColor: isYellow ? 'yellow' : 'inherit' }">
-    <img
-      alt="Vue logo"
-      class="logo"
-      src="./assets/logo.svg"
-      width="125"
-      height="125"
-      v-test:TREFDSB.click="'GDFSGDRS32534'"
-    />
-    <MyTest />
-
-    <div class="wrapper">
-      <HelloWorld v-if="addHello" msg="You did it!" />
-      <HelloWorld v-show="showHello" msg="You did it2!" />
-      <Button
-        title="Open Modal"
-        @click="handleClick1"
-        @hover="handleHover"
-        @change="handleChange"
-      />
-      <Button title="Toggle main theme" variant="round" @click="handleClick2" />
-      <Button title="Toggle yellow" variant="square" @click="handleClick3" />
-      <Button
-        v-for="(item, index) in arrayButtons"
-        :key="index"
-        :title="item.title"
-        :variant="item.variant"
-        @click="item.onClick"
-      />
-      <template v-for="(item, property, index) in objButtons" :key="property">
-        <Button
-          :title="item.title + '' + property + ' ' + index"
-          :variant="item.variant"
-          @click="item.onClick"
-          v-if="!item.disabled"
+  <ThemeProvider #default="{ theme, setThemeValue }">
+    <AuthProvider #default="{ user }">
+      <header :style="{ backgroundColor: isYellow ? 'yellow' : 'inherit' }">
+        <img
+          alt="Vue logo"
+          class="logo"
+          src="./assets/logo.svg"
+          width="125"
+          height="125"
+          v-test:TREFDSB.click="'GDFSGDRS32534'"
         />
-      </template>
-      <Modal>
-        <template #activator="{ openModal }">
-          <Button title="Open Modal" @click="openModal" />
-        </template>
-        <template v-slot:actions="{ closeModal }">
-          <Button title="Close From App" @click="closeModal" />
-        </template>
-        Content from App
-        <template #close-icon="{ closeModal }">
-          <Button title="X" @click="closeModal" />
-        </template>
-      </Modal>
-      <template v-if="user === null">
-        <h1>Login</h1>
-        <LoginForm :on-submit="login" />
-        <h1>Register</h1>
-        <UserForm :on-submit="register" />
-      </template>
-      <div v-else>
-        Connected as {{ user.email }}
-        <Button title="Logout" @click="logout" />
-        <h1>User list (li)</h1>
-        <UserList />
-        <h1>User list (span)</h1>
-        <UserList>
-          <template #item>
-            <span>Custom item</span>
-          </template>
-        </UserList>
-      </div>
-    </div>
-  </header>
+        <MyTest />
 
-  <main :style="theme.main">
-    <TheWelcome />
-  </main>
+        <div class="wrapper">
+          <HelloWorld v-if="addHello" msg="You did it!" />
+          <HelloWorld v-show="showHello" msg="You did it2!" />
+          <Button
+            title="Open Modal"
+            @click="handleClick1"
+            @hover="handleHover"
+            @change="handleChange"
+          />
+          <Button title="Toggle main theme" variant="round" @click="handleClick2(theme, setThemeValue)" />
+          <Button title="Toggle yellow" variant="square" @click="handleClick3" />
+          <Button
+            v-for="(item, index) in arrayButtons"
+            :key="index"
+            :title="item.title"
+            :variant="item.variant"
+            @click="item.onClick"
+          />
+          <template v-for="(item, property, index) in objButtons" :key="property">
+            <Button
+              :title="item.title + '' + property + ' ' + index"
+              :variant="item.variant"
+              @click="item.onClick"
+              v-if="!item.disabled"
+            />
+          </template>
+          <Modal>
+            <template #activator="{ openModal }">
+              <Button title="Open Modal" @click="openModal" />
+            </template>
+            <template v-slot:actions="{ closeModal }">
+              <Button title="Close From App" @click="closeModal" />
+            </template>
+            Content from App
+            <template #close-icon="{ closeModal }">
+              <Button title="X" @click="closeModal" />
+            </template>
+          </Modal>
+          <Security v-if="user === null" />
+          <SecuredZone v-else />
+        </div>
+      </header>
+
+      <main :style="theme.main">
+        <TheWelcome />
+      </main>
+    </AuthProvider>
+  </ThemeProvider>
 </template>
 
 <style scoped>
